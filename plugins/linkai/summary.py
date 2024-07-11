@@ -2,6 +2,7 @@ import requests
 from config import conf
 from common.log import logger
 import os
+import html
 
 
 class LinkSummary:
@@ -18,6 +19,7 @@ class LinkSummary:
         return self._parse_summary_res(res)
 
     def summary_url(self, url: str):
+        url = html.unescape(url)
         body = {
             "url": url
         }
@@ -59,7 +61,7 @@ class LinkSummary:
             return None
 
     def base_url(self):
-        return conf().get("linkai_api_base", "https://api.link-ai.chat")
+        return conf().get("linkai_api_base", "https://api.link-ai.tech")
 
     def headers(self):
         return {"Authorization": "Bearer " + conf().get("linkai_api_key")}
@@ -91,5 +93,4 @@ class LinkSummary:
         for support_url in support_list:
             if url.strip().startswith(support_url):
                 return True
-        logger.debug(f"[LinkSum] unsupported url, no need to process, url={url}")
         return False
